@@ -1,7 +1,7 @@
 # test/test_mmlind.py
 
 import pytest
-from src.integrals.mmlind import mmlind
+from structure_formation.numerics.integrals.mmlind import mmlind
 
 @pytest.mark.parametrize(
     "x, y, z, expected_value, expected_ier",

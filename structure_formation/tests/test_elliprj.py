@@ -1,9 +1,8 @@
 # tests/test_elliprj.py
 
 import pytest
-import numpy as np
-from src.integrals.mmlind import mmlind
-from src.integrals.elliprj import mmlind_scipy
+from structure_formation.numerics.integrals.mmlind import mmlind
+from structure_formation.numerics.integrals.elliprj import mmlind_scipy
 
 @pytest.mark.parametrize(
     "x, y, z, expected_value, expected_ier",

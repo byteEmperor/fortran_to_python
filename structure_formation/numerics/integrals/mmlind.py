@@ -1,4 +1,4 @@
-# src/integrals/mmlind.py
+# structure_formation/integrals/mmlind.py
 
 import numpy as np
 from .utils import MACHINE_INF, MACHINE_MIN, ERR_TOL, get_argmin_argmax
