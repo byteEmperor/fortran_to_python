@@ -32,7 +32,7 @@ def run_integration(simulation_params: SimulationParameters):
     # Let's say odeint signature is:
     # odeint(y_start, x1, x2, eps, h1, hmin, simulation_params, time_params, maxstp, kmax, dxsav)
 
-    xp, yp, kount, nok, nbad = odeint(
+    xp, yp, nok, nbad = odeint(
         y_start=y0,
         x1=time_params.tau_init,
         x2=time_params.tau_end,
@@ -49,7 +49,7 @@ def run_integration(simulation_params: SimulationParameters):
     # Initialize output list
     output = []
 
-    for i in range(kount):
+    for i in range(len(xp)):
         tau = xp[i]
 
         # Cosmological scale factor calculation with zbrent and your openU/closedU
@@ -68,9 +68,9 @@ def run_integration(simulation_params: SimulationParameters):
         Hz *= np.sqrt(4.0 / 3.0)
 
         # Extract current state variables
-        a1, v1 = yp[0][i], yp[1][i]
-        a2, v2 = yp[2][i], yp[3][i]
-        a3, v3 = yp[4][i], yp[5][i]
+        a1, v1 = yp[i][0], yp[i][1]
+        a2, v2 = yp[i][2], yp[i][3]
+        a3, v3 = yp[i][4], yp[i][5]
 
         # Peculiar velocities
         vpec1 = (v1 - Hz * a1) / (Hz * a1)
@@ -93,6 +93,6 @@ def run_integration(simulation_params: SimulationParameters):
             'aexp/ai': aexp / simulation_params.ai,
         })
 
-    print(f"Integration done: kount={kount}, nok={nok}, nbad={nbad}")
+    print(f"Integration done: kount={len(xp)}, nok={nok}, nbad={nbad}")
 
     return output

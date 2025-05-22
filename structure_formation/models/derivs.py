@@ -17,7 +17,7 @@ def derivs(t, y, simulation_params: SimulationParameters, time_params: TimeBound
     zi = simulation_params.zi
     factor = simulation_params.factor
     aEnd = simulation_params.aEnd
-    e11, e22, e33 = simulation_params.ExternalTides.e11, simulation_params.ExternalTides.e22, simulation_params.ExternalTides.e33
+    e11, e22, e33 = simulation_params.tides.e11, simulation_params.tides.e22, simulation_params.tides.e33
 
     sigma = time_params.sigma
 

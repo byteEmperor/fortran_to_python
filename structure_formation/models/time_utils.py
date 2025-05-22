@@ -28,7 +28,7 @@ def compute_conformal_time_bounds(simulation_params: SimulationParameters, a0: f
     zi = simulation_params.zi
     factor = simulation_params.factor
     aEnd = simulation_params.aEnd
-    e11, e22, e33 = simulation_params.ExternalTides.e11, simulation_params.ExternalTides.e22, simulation_params.ExternalTides.e33
+    e11, e22, e33 = simulation_params.tides.e11, simulation_params.tides.e22, simulation_params.tides.e33
 
     one = 1.0
     two = 2.0
