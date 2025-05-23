@@ -8,3 +8,4 @@ class OutputConfig:
     vpec_path: str
     ellipsoid_path: str
     logs_path: str = "./tmp/logs.txt" # optional default
+

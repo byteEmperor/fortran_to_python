@@ -10,7 +10,7 @@ from structure_formation.numerics.integrals.odeint import odeint
 from structure_formation.numerics.roots.zbrent import zbrent
 from structure_formation.models.zeropar_functions import openU, closedU
 
-def run_integration(simulation_params: SimulationParameters):
+def run_integration_fortran(simulation_params: SimulationParameters):
     # Unpack simulation params & init conditions
     time_params: TimeBounds = compute_conformal_time_bounds(simulation_params)
 

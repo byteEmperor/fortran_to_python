@@ -1,31 +1,21 @@
 # structure_formation/simulation/run_simulation.py
 
-from structure_formation.simulation.fortran_style_sim import run_integration
+from structure_formation.simulation.fortran_style_sim import run_integration_fortran
 from structure_formation.simulation.simulation_parameters import SimulationParameters
 from structure_formation.simulation.output_config import OutputConfig
 from structure_formation.simulation.scipy_style_sim import run_integration_scipy
 from structure_formation.simulation.scipy_style_sim2 import run_integration_scipy2
+from structure_formation.simulation.output_writer import writeHeaders
+from structure_formation.simulation.postprocessing import postprocessODE
 
-def fortran_style(output_config: OutputConfig, simulation_parameters: SimulationParameters):
+def write(output_config: OutputConfig, simulation_parameters: SimulationParameters, output):
+    with open(output_config.ai_path, "w") as f1, \
+        open(output_config.vpec_path, "w") as f2, \
+        open(output_config.ellipsoid_path, "w") as f3:
 
-    output = run_integration(simulation_parameters)
+        header_e = writeHeaders(f1, f2, f3, simulation_parameters)
 
-    # "a_i's" → xp(i), aexp, a1, a2, a3, aexp/ai
-    with open(output_config.ai_path, "w") as f:
-        for row in output:
-            f.write(f"{row['tau']:14.6f} {row['aexp']:14.6f} {row['axes'][0]:14.6f} "
-                    f"{row['axes'][1]:14.6f} {row['axes'][2]:14.6f} {row['aexp/ai']:14.6f}\n")
-
-    return 0
-
-def scipy_style(output_config: OutputConfig, simulation_parameters: SimulationParameters):
-
-    output = run_integration_scipy(simulation_parameters)
-
-    with open(output_config.ai_path, "w") as f:
-        for row in output:
-            f.write(f"{row['tau']:14.6f} {row['aexp']:14.6f} {row['axes'][0]:14.6f} "
-                    f"{row['axes'][1]:14.6f} {row['axes'][2]:14.6f} {row['aexp/ai']:14.6f}\n")
+        postprocessODE(output, f1, f2, f3, header_e, simulation_parameters)
 
 
 def create_simulation_parameters(Omega0, axes, ai, delta, aEnd):
@@ -43,27 +33,21 @@ def create_simulation_parameters(Omega0, axes, ai, delta, aEnd):
 
 def main():
 
-    simulation_parameters: SimulationParameters = create_simulation_parameters(1.0, [1.0, 0.8, 0.6],
-                                                                               0.1, 0.2, 1.0)
-
-    sim2: SimulationParameters = create_simulation_parameters(1.0, [1.0, 0.8, 0.6], 0.1, -0.5, 1)
-    sim3: SimulationParameters = create_simulation_parameters(1.0, [1.0, 0.8, 0.6], 0.1, -0.5, 1)
-
-    output_config: OutputConfig = OutputConfig(
-        ai_path="a_t.txt",
-        vpec_path="v.txt",
-        ellipsoid_path="e.txt"
-    )
-    output_config2: OutputConfig = OutputConfig(
-        ai_path="a3.txt",
-        vpec_path="v.txt",
-        ellipsoid_path="e.txt"
+    sim1: SimulationParameters = create_simulation_parameters(
+        Omega0=1.0,
+        axes=[1.0, 0.8, 0.6],
+        ai=0.1,
+        delta=0,
+        aEnd=1.0
     )
 
-    #fortran_style(output_config, sim3)
-    #scipy_style(output_config, sim2)
-    #scipy_style(output_config2, sim3)
-    run_integration_scipy2(simulation_params=sim3, output_config=output_config)
+    output1: OutputConfig = OutputConfig(
+        ai_path="a_1.txt",
+        vpec_path="v_1.txt",
+        ellipsoid_path="e_1.txt"
+    )
+
+    write(output1, sim1, run_integration_fortran(sim1))
 
 
 if __name__ == "__main__":
