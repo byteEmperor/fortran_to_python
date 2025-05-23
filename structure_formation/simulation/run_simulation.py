@@ -1,10 +1,12 @@
 # structure_formation/simulation/run_simulation.py
 
+import os
+import numpy as np
+
 from structure_formation.simulation.fortran_style_sim import run_integration_fortran
 from structure_formation.simulation.simulation_parameters import SimulationParameters
 from structure_formation.simulation.output_config import OutputConfig
 from structure_formation.simulation.scipy_style_sim import run_integration_scipy
-from structure_formation.simulation.scipy_style_sim2 import run_integration_scipy2
 from structure_formation.simulation.output_writer import writeHeaders
 from structure_formation.simulation.postprocessing import postprocessODE
 
@@ -30,6 +32,37 @@ def create_simulation_parameters(Omega0, axes, ai, delta, aEnd):
 
     return simulation_parameters
 
+def delta_sweep(base_config_dir, delta_values, base_sim_params: SimulationParameters, simulation_function):
+    os.makedirs(base_config_dir, exist_ok=True)
+
+    # takes either run_integration_fortran or run_integration_scipy
+
+    for i, delta in enumerate(delta_values):
+        # Clone base parameters and change delta
+        sim_params = SimulationParameters(
+            Omega0=base_sim_params.Omega0,
+            e=base_sim_params.e,
+            ai=base_sim_params.ai,
+            zi=base_sim_params.zi,
+            delta=delta,
+            aEnd=base_sim_params.aEnd,
+            tides=base_sim_params.tides,
+        )
+
+        # Create unique file names per delta
+        suffix = f"d{i:03d}"  # or f"d{delta:+.2f}".replace('.', 'p').replace('-', 'm') for delta in filename
+
+        output_config = OutputConfig(
+            ai_path=os.path.join(base_config_dir, f"ai_{suffix}.txt"),
+            vpec_path=os.path.join(base_config_dir, f"vpec_{suffix}.txt"),
+            ellipsoid_path=os.path.join(base_config_dir, f"ellipsoid_{suffix}.txt"),
+            logs_path=os.path.join(base_config_dir, f"log_{suffix}.txt"),
+        )
+
+        print(f"[Run {i}] Running simulation with delta = {delta}")
+        output = simulation_function(sim_params)
+        write(output_config, sim_params, output)
+
 
 def main():
 
@@ -37,7 +70,7 @@ def main():
         Omega0=1.0,
         axes=[1.0, 0.8, 0.6],
         ai=0.1,
-        delta=0,
+        delta=0.0,
         aEnd=1.0
     )
 
@@ -47,7 +80,9 @@ def main():
         ellipsoid_path="e_1.txt"
     )
 
-    write(output1, sim1, run_integration_fortran(sim1))
+    #write(output1, sim1, run_integration_fortran(sim1))
+    delta_vals = np.linspace(-1.0, 0.5, 10)
+    delta_sweep("sweep_output", delta_vals, sim1, run_integration_fortran)
 
 
 if __name__ == "__main__":

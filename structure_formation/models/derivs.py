@@ -67,11 +67,10 @@ def derivs(t, y, simulation_params: SimulationParameters, time_params: TimeBound
 
     # mmlind returns a tuple, so we take the first value
     alpha = [0, 0, 0]
-    alpha[0], _ = mmlind_scipy(b32, b22, b12)
-    alpha[1], _ = mmlind_scipy(b12, b32, b22)
-    alpha[2], _ = mmlind_scipy(b12, b22, b32)
+    alpha[0], _ = mmlind(b32, b22, b12)
+    alpha[1], _ = mmlind(b12, b32, b22)
+    alpha[2], _ = mmlind(b12, b22, b32)
     alpha = [twothr * b1 * b2 * b3 * a for a in alpha]
-    print(f"alpha = {alpha}, aexp = {aexp}, delta = {delta}, t = {t}")
 
     # External tidal evolution
     e11t = auniv * e11
