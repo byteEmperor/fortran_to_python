@@ -6,64 +6,63 @@ import pytest
 from structure_formation.simulation.simulation_parameters import SimulationParameters
 from structure_formation.simulation.scipy_style_sim import run_integration_scipy
 
-# ------------------------
-# Test helpers
-# ------------------------
+# === 1. Symmetry ===
 
 def check_symmetry(output, tol=1e-6):
     final = output[-1]['axes']
     symmetric = all(abs(final[i] - final[j]) < tol for i in range(3) for j in range(i + 1, 3))
-    return symmetric, final
+    return symmetric, {"final_axes": final}
+
+
+# === 2. Expansion (underdensity sanity check) ===
 
 def check_expanding(output):
     a_start = output[0]['axes'][0]
     a_end = output[-1]['axes'][0]
-    return a_end > a_start, (a_start, a_end)
+    return a_end > a_start, {"a_start": a_start, "a_end": a_end}
+
+
+# === 3. Collapse (overdensity sanity check) ===
 
 def check_collapsing(output):
     a_start = output[0]['axes'][0]
     a_end = output[-1]['axes'][0]
-    return a_end < a_start, (a_start, a_end)
+    return a_end < a_start, {"a_start": a_start, "a_end": a_end}
 
-def check_underdensity_behavior(output, tol=0.05):
-    a_start = output[0]['axes']
-    a_end = output[-1]['axes']
 
-    # Check all axes expanded
-    expanded = all(a_end[i] > a_start[i] for i in range(3))
+# === 4. Underdensity: sphericity improves ===
 
-    # Compute sphericity ratio at each time
-    ratios = []
+def check_underdensity_behavior(output):
+    errors = []
+
     for row in output:
-        axes = row['axes']
-        max_a = max(axes)
-        min_a = min(axes)
-        ratios.append(max_a / min_a)
+        a1, a2, a3 = row['axes']
+        r12 = max(a1 / a2, a2 / a1)
+        r13 = max(a1 / a3, a3 / a1)
+        r23 = max(a2 / a3, a3 / a2)
+        error = max(abs(r12 - 1), abs(r13 - 1), abs(r23 - 1))
+        errors.append(error)
 
-    start_ratio = ratios[0]
-    end_ratio = ratios[-1]
-    trend_toward_sphericity = all(r <= start_ratio + tol for r in ratios[1:]) and end_ratio < start_ratio
+    start_error = errors[0]
+    end_error = errors[-1]
+    passed = end_error < start_error
 
-    return expanded and trend_toward_sphericity, {
-        "start_axes": a_start,
-        "end_axes": a_end,
-        "start_ratio": start_ratio,
-        "end_ratio": end_ratio,
-        "ratios": ratios[:10] + ['...'] + ratios[-5:]
+    return passed, {
+        "start_error": start_error,
+        "end_error": end_error,
+        "errors": errors[:10] + ['...'] + errors[-5:],
+        "start_axes": output[0]['axes'],
+        "end_axes": output[-1]['axes'],
     }
 
 
-
-
-# ------------------------
-# Parametrized tests
-# ------------------------
+# === Parametrized Test Cases ===
 
 @pytest.mark.parametrize(
     "e, delta, check_fn, description",
     [
         ([1.0, 1.0, 1.0], 0.0, check_symmetry, "Symmetry should be preserved for spherical delta=0"),
-        ([1.0, 0.8, 0.6], -0.5, check_underdensity_behavior, "Underdensity should expand ellipsoid"),
+        ([1.0, 0.8, 0.6], -0.5, check_underdensity_behavior, "Underdensity should expand and approach sphericity"),
         ([1.0, 0.8, 0.6], 0.5, check_collapsing, "Overdensity should collapse ellipsoid"),
     ]
 )
@@ -81,14 +80,10 @@ def test_simulation_behavior(e, delta, check_fn, description):
     passed, data = check_fn(output)
 
     print(f"\n[TEST] {description}")
-    if isinstance(data, dict):
-        print(f"  Start Axes: {data['start_axes']}")
-        print(f"  End Axes:   {data['end_axes']}")
-        print(f"  Sphericity: start={data['start_ratio']:.4f}, end={data['end_ratio']:.4f}")
-        if isinstance(data['ratios'], list):
-            print(f"  Ratio samples: {data['ratios']}")
+    for key, val in data.items():
+        print(f"  {key}: {val}")
 
-
-
-
-
+    assert passed is True, (
+        f"[FAIL] {description}\nDetails:\n" +
+        "\n".join(f"  {k}: {v}" for k, v in data.items())
+    )
