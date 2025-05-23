@@ -4,6 +4,7 @@ from structure_formation.simulation.fortran_style_sim import run_integration
 from structure_formation.simulation.simulation_parameters import SimulationParameters
 from structure_formation.simulation.output_config import OutputConfig
 from structure_formation.simulation.scipy_style_sim import run_integration_scipy
+from structure_formation.simulation.scipy_style_sim2 import run_integration_scipy2
 
 def fortran_style(output_config: OutputConfig, simulation_parameters: SimulationParameters):
 
@@ -46,10 +47,10 @@ def main():
                                                                                0.1, 0.2, 1.0)
 
     sim2: SimulationParameters = create_simulation_parameters(1.0, [1.0, 0.8, 0.6], 0.1, -0.5, 1)
-    sim3: SimulationParameters = create_simulation_parameters(1.0, [0.8, 0.8, 0.8], 0.1, 5, 10)
+    sim3: SimulationParameters = create_simulation_parameters(1.0, [1.0, 0.8, 0.6], 0.1, -0.5, 1)
 
     output_config: OutputConfig = OutputConfig(
-        ai_path="a2.txt",
+        ai_path="a_t.txt",
         vpec_path="v.txt",
         ellipsoid_path="e.txt"
     )
@@ -59,9 +60,10 @@ def main():
         ellipsoid_path="e.txt"
     )
 
-    #fortran_style(output_config, simulation_parameters)
-    scipy_style(output_config, sim2)
-    scipy_style(output_config2, sim3)
+    #fortran_style(output_config, sim3)
+    #scipy_style(output_config, sim2)
+    #scipy_style(output_config2, sim3)
+    run_integration_scipy2(simulation_params=sim3, output_config=output_config)
 
 
 if __name__ == "__main__":

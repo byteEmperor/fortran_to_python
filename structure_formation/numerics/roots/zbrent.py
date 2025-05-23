@@ -1,3 +1,5 @@
+# structure_formation/numerics/roots/zbrent.py
+
 def zbrent(func, x1, x2, tol):
     """
     Brent's method root finding.

@@ -1,4 +1,4 @@
-# structure_formation/integrals/utils.py
+# structure_formation/numerics/integrals/utils.py
 
 import numpy as np
 

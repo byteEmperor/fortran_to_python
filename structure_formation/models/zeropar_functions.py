@@ -1,3 +1,5 @@
+# structure_formation/models/zeropar_functions.py
+
 import math
 
 def openU(theta, sigma, ztau):

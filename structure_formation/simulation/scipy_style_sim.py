@@ -1,5 +1,7 @@
+# structure_formation/simulation/scipy_style_sim.py
+
 import numpy as np
-from scipy.optimize import brentq  # <-- use scipy's brentq
+from scipy.optimize import brentq
 
 from structure_formation.simulation.simulation_parameters import SimulationParameters
 from structure_formation.models.time_utils import TimeBounds, compute_conformal_time_bounds
