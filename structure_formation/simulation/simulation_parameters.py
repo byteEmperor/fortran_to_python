@@ -12,4 +12,6 @@ class SimulationParameters:
     delta: float            # Initial overdensity of ellipse (rho_E/rho_U - 1)
     factor: float = 1.0     # Fraction of peculiar velocity at initial epoch
     aEnd: float = 1.0       # Expansion factor at end of calc. a=1=now:
-    tides: ExternalTides = field(default_factory=ExternalTides)
+    e11: float = 0
+    e22: float = 0
+    e33: float = 0

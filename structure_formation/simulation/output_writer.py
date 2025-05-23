@@ -16,9 +16,9 @@ def writeHeaders(f1, f2, f3, simulation_params):
     e0, e1, e2 = simulation_params.e
     ai = simulation_params.ai
     delta0 = simulation_params.delta
-    e11 = simulation_params.tides.e11
-    e22 = simulation_params.tides.e22
-    e33 = simulation_params.tides.e33
+    e11 = simulation_params.e11
+    e22 = simulation_params.e22
+    e33 = simulation_params.e33
 
     # --- Header line 1: Parameter labels ---
     param_labels = ["Omega0", "e0", "e1", "e2", "e11", "e22", "e33", "ai", "delta0"]

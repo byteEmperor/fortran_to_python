@@ -73,7 +73,10 @@ def test_simulation_behavior(e, delta, check_fn, description):
         ai=0.1,
         zi=1.0 / 0.1 - 1.0,
         delta=delta,
-        aEnd=1.0
+        aEnd=1.0,
+        e11=0.01,
+        e22=0.0,
+        e33=-0.1
     )
 
     output = run_integration_scipy(sim_params)
