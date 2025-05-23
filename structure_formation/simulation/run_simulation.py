@@ -70,7 +70,7 @@ def main():
 
     sim1: SimulationParameters = create_simulation_parameters(
         Omega0=1.0,
-        axes=[0.8, 0.8, 0.8],
+        axes=[1.0, 0.8, 0.6],
         ai=0.1,
         delta=0.0,
         aEnd=1.0
@@ -83,7 +83,7 @@ def main():
     )
 
     #write(output1, sim1, run_integration_fortran(sim1))
-    delta_vals = np.linspace(0, 0, 1)
+    delta_vals = np.linspace(-0.5, -0.5, 1)
     delta_sweep("temp", delta_vals, sim1, run_integration_scipy)
     #write(output1, sim1, run_integration_fortran(sim1))
 

@@ -2,6 +2,7 @@
 
 import numpy as np
 from structure_formation.numerics.integrals.mmlind import mmlind
+from structure_formation.numerics.integrals.elliprj import mmlind_scipy
 
 def new_derivs(t, y, simulation_params, time_params):
     """
@@ -28,9 +29,9 @@ def new_derivs(t, y, simulation_params, time_params):
     # Alpha_m values via Carlson elliptic integrals (symmetry-preserving)
     b1, b2, b3 = a1, a2, a3
     alpha = [0.0, 0.0, 0.0]
-    alpha[0], _ = mmlind((b2 / b1)**2, (b3 / b1)**2, 1.0)
-    alpha[1], _ = mmlind((b1 / b2)**2, (b3 / b2)**2, 1.0)
-    alpha[2], _ = mmlind((b1 / b3)**2, (b2 / b3)**2, 1.0)
+    alpha[0], _ = mmlind_scipy((b2 / b1)**2, (b3 / b1)**2, 1.0)
+    alpha[1], _ = mmlind_scipy((b1 / b2)**2, (b3 / b2)**2, 1.0)
+    alpha[2], _ = mmlind_scipy((b1 / b3)**2, (b2 / b3)**2, 1.0)
 
     # Background matter density: rho_u ∝ 1 / t^2 (EdS units)
     if t == 0:
