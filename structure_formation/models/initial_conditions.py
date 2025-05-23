@@ -9,6 +9,6 @@ class CollapseParams:
 
 @dataclass
 class ExternalTides:
-    e11: float = 0
-    e22: float = 0
-    e33: float = 0
+    e11: float = 0.0
+    e22: float = 0.0
+    e33: float = 0.0

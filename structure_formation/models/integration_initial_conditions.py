@@ -5,7 +5,7 @@ import numpy as np
 
 from structure_formation.simulation.simulation_parameters import SimulationParameters
 
-from structure_formation.numerics.integrals.mmlind import mmlind
+from structure_formation.numerics.integrals.elliprj import mmlind_scipy
 from .zeropar_functions import openU, closedU
 
 def initialize_conditions(simulation_params: SimulationParameters):
@@ -39,9 +39,9 @@ def initialize_conditions(simulation_params: SimulationParameters):
     b12, b22, b32 = b1 ** 2, b2 ** 2, b3 ** 2
 
     alpha = [0.0, 0.0, 0.0]
-    alpha[0], ierr = mmlind(b32, b22, b12)
-    alpha[1], ierr = mmlind(b12, b32, b22)
-    alpha[2], ierr = mmlind(b12, b22, b32)
+    alpha[0], ierr = mmlind_scipy(b32, b22, b12)
+    alpha[1], ierr = mmlind_scipy(b12, b32, b22)
+    alpha[2], ierr = mmlind_scipy(b12, b22, b32)
 
     alpha = [twothr * b1 * b2 * b3 * a for a in alpha]
 
