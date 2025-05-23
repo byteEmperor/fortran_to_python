@@ -9,6 +9,7 @@ from structure_formation.simulation.output_config import OutputConfig
 from structure_formation.simulation.scipy_style_sim import run_integration_scipy
 from structure_formation.simulation.output_writer import writeHeaders
 from structure_formation.simulation.postprocessing import postprocessODE
+from structure_formation.simulation.leapfrog_style_sim import run_integration_leapfrog
 
 def write(output_config: OutputConfig, simulation_parameters: SimulationParameters, output):
     with open(output_config.ai_path, "w") as f1, \
@@ -84,7 +85,7 @@ def main():
 
     #write(output1, sim1, run_integration_fortran(sim1))
     delta_vals = np.linspace(-0.5, -0.5, 1)
-    delta_sweep("temp", delta_vals, sim1, run_integration_scipy)
+    delta_sweep("temp", delta_vals, sim1, run_integration_leapfrog)
     #write(output1, sim1, run_integration_fortran(sim1))
 
 
