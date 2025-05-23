@@ -6,6 +6,7 @@ from structure_formation.simulation.simulation_parameters import SimulationParam
 from structure_formation.models.time_utils import TimeBounds
 from structure_formation.models.derivs import derivs
 from structure_formation.numerics.integrals.rkqc import rkqc
+from structure_formation.models.new_derivs import new_derivs
 
 def odeint(y_start, x1, x2, eps, h1, hmin, simulation_params: SimulationParameters, time_params: TimeBounds, maxstp = 10000, kmax = 500, dxsav = 0.1):
     """

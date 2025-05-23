@@ -81,8 +81,9 @@ def main():
     )
 
     #write(output1, sim1, run_integration_fortran(sim1))
-    delta_vals = np.linspace(-1.0, 0.5, 10)
-    delta_sweep("sweep_output", delta_vals, sim1, run_integration_fortran)
+    delta_vals = np.linspace(-0.5, -0.5, 1)
+    delta_sweep("new_derivs", delta_vals, sim1, run_integration_scipy)
+    #write(output1, sim1, run_integration_fortran(sim1))
 
 
 if __name__ == "__main__":
