@@ -32,21 +32,26 @@ def check_underdensity_behavior(output, tol=0.05):
     # Check all axes expanded
     expanded = all(a_end[i] > a_start[i] for i in range(3))
 
-    # Compute anisotropy ratios
-    def max_ratio(axes):
-        return max(axes[i] / axes[j] for i in range(3) for j in range(3) if i != j)
+    # Compute sphericity ratio at each time
+    ratios = []
+    for row in output:
+        axes = row['axes']
+        max_a = max(axes)
+        min_a = min(axes)
+        ratios.append(max_a / min_a)
 
-    r_start = max_ratio(a_start)
-    r_end = max_ratio(a_end)
+    start_ratio = ratios[0]
+    end_ratio = ratios[-1]
+    trend_toward_sphericity = all(r <= start_ratio + tol for r in ratios[1:]) and end_ratio < start_ratio
 
-    isotropic = r_end < r_start  # trending toward sphericity
-
-    return expanded and isotropic, {
+    return expanded and trend_toward_sphericity, {
         "start_axes": a_start,
         "end_axes": a_end,
-        "r_start": r_start,
-        "r_end": r_end
+        "start_ratio": start_ratio,
+        "end_ratio": end_ratio,
+        "ratios": ratios[:10] + ['...'] + ratios[-5:]
     }
+
 
 
 
@@ -79,10 +84,10 @@ def test_simulation_behavior(e, delta, check_fn, description):
     if isinstance(data, dict):
         print(f"  Start Axes: {data['start_axes']}")
         print(f"  End Axes:   {data['end_axes']}")
-        if 'r_start' in data:
-            print(f"  Anisotropy: start={data['r_start']:.4f}, end={data['r_end']:.4f}")
-    else:
-        print(f"  Final Axes: {data}")
+        print(f"  Sphericity: start={data['start_ratio']:.4f}, end={data['end_ratio']:.4f}")
+        if isinstance(data['ratios'], list):
+            print(f"  Ratio samples: {data['ratios']}")
+
 
 
 
