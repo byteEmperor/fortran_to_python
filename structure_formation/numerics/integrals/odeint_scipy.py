@@ -2,6 +2,7 @@
 
 from structure_formation.models.derivs import derivs
 from structure_formation.models.new_derivs import new_derivs
+from structure_formation.models.derivs_evol_delta import derivs_evol_delta
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -27,7 +28,7 @@ def odeint_scipy(y_start, x1, x2, eps, h1, hmin, simulation_params, time_params,
 
     # Wrapper derivative function for solve_ivp
     def fun(t, y):
-        return new_derivs(t, y, simulation_params, time_params)
+        return derivs_evol_delta(t, y, simulation_params, time_params)
 
     sol = solve_ivp(
         fun=fun,

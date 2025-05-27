@@ -8,6 +8,7 @@ from structure_formation.models.derivs import derivs
 from structure_formation.numerics.integrals.rkqc import rkqc
 from structure_formation.models.new_derivs import new_derivs
 from structure_formation.models.derivs_evol_delta import derivs_evol_delta
+from structure_formation.models.derivs_split import derivs_evol_delta_split
 
 def odeint(y_start, x1, x2, eps, h1, hmin, simulation_params: SimulationParameters, time_params: TimeBounds, maxstp = 10000, kmax = 500, dxsav = 0.1):
     """
@@ -61,7 +62,7 @@ def odeint(y_start, x1, x2, eps, h1, hmin, simulation_params: SimulationParamete
             yp.append(y.copy())
             break
 
-        dydx = derivs_evol_delta(x, y, simulation_params, time_params)
+        dydx = derivs_evol_delta_split(x, y, simulation_params, time_params)
         yscal = np.abs(y) + np.abs(h * dydx) + 1e-30
 
         # Save if enough time has passed

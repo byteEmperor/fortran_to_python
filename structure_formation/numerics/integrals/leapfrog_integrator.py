@@ -1,23 +1,24 @@
 import numpy as np
 
 from structure_formation.models.derivs_evol_delta import derivs_evol_delta
+from structure_formation.models.derivs_split import derivs_evol_delta_split
+from structure_formation.models.new_derivs import new_derivs
 
-def compute_acceleration(a_vec, t, simulation_params):
+def compute_acceleration(a_vec, t, simulation_params, time_params):
     # Convert [a1, a2, a3] to full y with zero velocity placeholders
     y_dummy = np.zeros(6)
     y_dummy[0], y_dummy[2], y_dummy[4] = a_vec[0], a_vec[1], a_vec[2]
     y_dummy[1], y_dummy[3], y_dummy[5] = 0.0, 0.0, 0.0  # not used
 
     # Call your existing derivs
-    from structure_formation.models.new_derivs import new_derivs
-    dydt = derivs_evol_delta(t, y_dummy, simulation_params, None)
+    dydt = derivs_evol_delta_split(t, y_dummy, simulation_params, time_params)
 
     # Extract only accelerations
     acc = np.array([dydt[1], dydt[3], dydt[5]])
     return acc
 
 
-def leapfrog_integrator(y_start, x1, x2, h, simulation_params, time_params=None):
+def leapfrog_integrator(y_start, x1, x2, h, simulation_params, time_params):
     num_steps = int((x2 - x1) / h) + 1
     dim = len(y_start)
 
@@ -34,7 +35,7 @@ def leapfrog_integrator(y_start, x1, x2, h, simulation_params, time_params=None)
     yp[0] = y_start
 
     for i in range(1, num_steps):
-        acc = compute_acceleration(a, t, simulation_params)
+        acc = compute_acceleration(a, t, simulation_params, time_params)
 
         # Kick 1: update velocity to half step
         v_half = v + 0.5 * h * acc
@@ -43,7 +44,7 @@ def leapfrog_integrator(y_start, x1, x2, h, simulation_params, time_params=None)
         a_new = a + h * v_half
 
         # Kick 2: update velocity full step using new position
-        acc_new = compute_acceleration(a_new, t + h, simulation_params)
+        acc_new = compute_acceleration(a_new, t + h, simulation_params, time_params)
         v_new = v_half + 0.5 * h * acc_new
 
         # Store

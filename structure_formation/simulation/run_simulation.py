@@ -87,6 +87,7 @@ def main():
     delta_vals = np.linspace(-0.5, -0.5, 1)
     delta_sweep("temp", delta_vals, sim1, run_integration_leapfrog)
     #write(output1, sim1, run_integration_fortran(sim1))
+    #delta_sweep("temp2", delta_vals, sim1, run_integration_scipy)
 
 
 if __name__ == "__main__":
