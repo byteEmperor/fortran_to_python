@@ -47,9 +47,9 @@ def initialize_conditions(simulation_params: SimulationParameters):
 
     # Peculiar velocities
     vpec = [
-        -half * Hi * Omega_init ** 0.6 * alpha[0] * (delta - one) - half * Hi * Omega_init ** 0.6 * e11 * ai,
-        -half * Hi * Omega_init ** 0.6 * alpha[1] * (delta - one) - half * Hi * Omega_init ** 0.6 * e22 * ai,
-        -half * Hi * Omega_init ** 0.6 * alpha[2] * (delta - one) - half * Hi * Omega_init ** 0.6 * e33 * ai,
+        -half * Hi * Omega_init ** 0.6 * alpha[0] * delta - half * Hi * Omega_init ** 0.6 * e11 * ai,
+        -half * Hi * Omega_init ** 0.6 * alpha[1] * delta - half * Hi * Omega_init ** 0.6 * e22 * ai,
+        -half * Hi * Omega_init ** 0.6 * alpha[2] * delta - half * Hi * Omega_init ** 0.6 * e33 * ai,
     ]
 
     # Full initial velocities

@@ -21,14 +21,17 @@ def write(output_config: OutputConfig, simulation_parameters: SimulationParamete
         postprocessODE(output, f1, f2, f3, header_e, simulation_parameters)
 
 
-def create_simulation_parameters(Omega0, axes, ai, delta, aEnd):
+def create_simulation_parameters(Omega0, axes, ai, delta, aEnd, e11, e22, e33):
     simulation_parameters = SimulationParameters(
         Omega0=Omega0,
         e = axes,
         ai = ai,
         zi = 1.0 / ai - 1.0,
         delta = delta,
-        aEnd = aEnd
+        aEnd = aEnd,
+        e11 = e11,
+        e22 = e22,
+        e33 = e33
     )
 
     return simulation_parameters
@@ -74,7 +77,20 @@ def main():
         axes=[1.0, 0.8, 0.6],
         ai=0.1,
         delta=0.0,
-        aEnd=1.0
+        aEnd=1.0,
+        e11=0,
+        e22=0,
+        e33=0
+    )
+    sim2: SimulationParameters = create_simulation_parameters(
+        Omega0=1.0,
+        axes=[1.0, 1.0, 1.0],
+        ai=0.1,
+        delta=0.0,
+        aEnd=1.0,
+        e11=0,
+        e22=0,
+        e33=0
     )
 
     output1: OutputConfig = OutputConfig(
@@ -85,7 +101,11 @@ def main():
 
     #write(output1, sim1, run_integration_fortran(sim1))
     delta_vals = np.linspace(-0.5, -0.5, 1)
-    delta_sweep("temp", delta_vals, sim1, run_integration_leapfrog)
+    delta_vals2 = np.linspace(0.5, 0.5, 1)
+    delta_vals3 = np.linspace(0, 0, 1)
+    delta_sweep("underdensity", delta_vals, sim1, run_integration_leapfrog)
+    delta_sweep("overdensity", delta_vals2, sim1, run_integration_leapfrog)
+    delta_sweep("sphe_initial", delta_vals3, sim2, run_integration_leapfrog)
     #write(output1, sim1, run_integration_fortran(sim1))
     #delta_sweep("temp2", delta_vals, sim1, run_integration_scipy)
 

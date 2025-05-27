@@ -3,6 +3,7 @@ import numpy as np
 from structure_formation.models.derivs_evol_delta import derivs_evol_delta
 from structure_formation.models.derivs_split import derivs_evol_delta_split
 from structure_formation.models.new_derivs import new_derivs
+from structure_formation.models.derivs_fortran import derivs_fortran_style
 
 def compute_acceleration(a_vec, t, simulation_params, time_params):
     # Convert [a1, a2, a3] to full y with zero velocity placeholders
@@ -11,7 +12,7 @@ def compute_acceleration(a_vec, t, simulation_params, time_params):
     y_dummy[1], y_dummy[3], y_dummy[5] = 0.0, 0.0, 0.0  # not used
 
     # Call your existing derivs
-    dydt = derivs_evol_delta_split(t, y_dummy, simulation_params, time_params)
+    dydt = derivs_fortran_style(t, y_dummy, simulation_params, time_params)
 
     # Extract only accelerations
     acc = np.array([dydt[1], dydt[3], dydt[5]])
