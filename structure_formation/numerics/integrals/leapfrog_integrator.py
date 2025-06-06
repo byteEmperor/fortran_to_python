@@ -4,6 +4,16 @@ from structure_formation.models.derivs_evol_delta import derivs_evol_delta
 from structure_formation.models.derivs_split import derivs_evol_delta_split
 from structure_formation.models.new_derivs import new_derivs
 from structure_formation.models.derivs_fortran import derivs_fortran_style
+from structure_formation.models.derivs_boss_tidal import derivs_boss_tidal
+from structure_formation.models.derivs_finalboss import sphericalizing_derivs
+from structure_formation.models.derivs_finalboss_dark import dark_derivs
+from structure_formation.models.chat_finalboss import chat_derivs
+from structure_formation.models.tester import tester
+from structure_formation.models.derivs_finalboss_dark2 import sphericalizing_derivs_dark
+
+
+
+
 
 def compute_acceleration(a_vec, t, simulation_params, time_params):
     # Convert [a1, a2, a3] to full y with zero velocity placeholders
@@ -12,7 +22,7 @@ def compute_acceleration(a_vec, t, simulation_params, time_params):
     y_dummy[1], y_dummy[3], y_dummy[5] = 0.0, 0.0, 0.0  # not used
 
     # Call your existing derivs
-    dydt = derivs_fortran_style(t, y_dummy, simulation_params, time_params)
+    dydt = sphericalizing_derivs_dark(t, y_dummy, simulation_params, time_params)
 
     # Extract only accelerations
     acc = np.array([dydt[1], dydt[3], dydt[5]])

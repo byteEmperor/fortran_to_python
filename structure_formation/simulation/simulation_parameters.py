@@ -15,3 +15,4 @@ class SimulationParameters:
     e11: float = 0
     e22: float = 0
     e33: float = 0
+    lambda0: float = 0

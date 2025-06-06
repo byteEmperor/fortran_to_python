@@ -21,7 +21,7 @@ def write(output_config: OutputConfig, simulation_parameters: SimulationParamete
         postprocessODE(output, f1, f2, f3, header_e, simulation_parameters)
 
 
-def create_simulation_parameters(Omega0, axes, ai, delta, aEnd, e11, e22, e33):
+def create_simulation_parameters(Omega0, axes, ai, delta, aEnd, e11, e22, e33, lambda0):
     simulation_parameters = SimulationParameters(
         Omega0=Omega0,
         e = axes,
@@ -31,7 +31,8 @@ def create_simulation_parameters(Omega0, axes, ai, delta, aEnd, e11, e22, e33):
         aEnd = aEnd,
         e11 = e11,
         e22 = e22,
-        e33 = e33
+        e33 = e33,
+        lambda0 = lambda0
     )
 
     return simulation_parameters
@@ -52,7 +53,8 @@ def delta_sweep(base_config_dir, delta_values, base_sim_params: SimulationParame
             aEnd=base_sim_params.aEnd,
             e11=base_sim_params.e11,
             e22=base_sim_params.e22,
-            e33=base_sim_params.e33
+            e33=base_sim_params.e33,
+            lambda0=base_sim_params.lambda0
         )
 
         # Create unique file names per delta
@@ -74,23 +76,25 @@ def main():
 
     sim1: SimulationParameters = create_simulation_parameters(
         Omega0=1.0,
-        axes=[1.0, 0.8, 0.6],
+        axes=[1.0, 0.9, 0.8],
         ai=0.1,
         delta=0.0,
         aEnd=1.0,
         e11=0,
         e22=0,
-        e33=0
+        e33=0,
+        lambda0=1e-1
     )
     sim2: SimulationParameters = create_simulation_parameters(
         Omega0=1.0,
-        axes=[1.0, 1.0, 1.0],
+        axes=[1.0, 0.9, 0.8],
         ai=0.1,
         delta=0.0,
         aEnd=1.0,
         e11=0,
         e22=0,
-        e33=0
+        e33=0,
+        lambda0=0.0
     )
 
     output1: OutputConfig = OutputConfig(
@@ -99,13 +103,13 @@ def main():
         ellipsoid_path="e_1.txt"
     )
 
-    #write(output1, sim1, run_integration_fortran(sim1))
-    delta_vals = np.linspace(-0.5, -0.5, 1)
-    delta_vals2 = np.linspace(0.5, 0.5, 1)
+    #write(output1, sim2, run_integration_fortran(sim2))
+    delta_vals = np.linspace(-0.9, -0.1, 30)
+    delta_vals2 = np.linspace(0.9, 0.1, 30)
     delta_vals3 = np.linspace(0, 0, 1)
-    delta_sweep("underdensity", delta_vals, sim1, run_integration_leapfrog)
-    delta_sweep("overdensity", delta_vals2, sim1, run_integration_leapfrog)
-    delta_sweep("sphe_initial", delta_vals3, sim2, run_integration_leapfrog)
+    delta_sweep("dark_big", delta_vals, sim1, run_integration_leapfrog)
+    #delta_sweep("overdensity", delta_vals2, sim1, run_integration_leapfrog)
+    #delta_sweep("sphe_initial", delta_vals3, sim2, run_integration_leapfrog)
     #write(output1, sim1, run_integration_fortran(sim1))
     #delta_sweep("temp2", delta_vals, sim1, run_integration_scipy)
 

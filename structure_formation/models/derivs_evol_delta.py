@@ -132,7 +132,7 @@ def derivs_evol_delta(t, y, simulation_params, time_params):
         shape_correction = gamma * decay * (alpha_i - 1.0 / 3.0) * delta_t
         iso_damping = -beta * (a - a_mean)
 
-        acc = 4.0 * np.pi * rho_u * a * (base + shape_correction) + iso_damping
+        acc = -4.0 * np.pi * rho_u * a * (base + shape_correction) + iso_damping
         dydt[2 * i + 1] = acc
 
     return dydt
